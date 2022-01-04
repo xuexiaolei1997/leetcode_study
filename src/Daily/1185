@@ -1,0 +1,19 @@
+class Solution:
+    def dayOfTheWeek(self, day: int, month: int, year: int) -> str:
+        # 蔡勒公式
+        # w=y+[y/4]+[c/4]-2c+[26(m+1）/10]+d-1
+        if month < 3:
+            month += 12
+            year -= 1
+
+        y = year % 100
+        c = year // 100
+        m = month
+        d = day
+
+        w = c // 4 - 2*c + y + y // 4 + 13 * (m+1)//5 + d - 1
+        w = w % 7
+        if w == 7:
+            w = 0
+        ret = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        return ret[w]
