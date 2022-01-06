@@ -1,0 +1,49 @@
+class Solution:
+    def simplifyPath(self, path: str) -> str:
+        if len(path) == 0:
+            return '/'
+        # 方法一
+        if path[:-1] != '/':
+            path += '/'
+
+        res = ''
+        left = 0
+        right = 0
+        while right < len(path)-1:
+            right += 1
+            if path[left] == '/' and path[right] == '/':
+                temp = path[left+1:right]
+                if temp == '' or temp == '.':
+                    pass
+                elif temp == '..':
+                    cut_index = len(res) - 1
+                    while cut_index > 0:
+                        if res[cut_index] == '/':
+                            break
+                        cut_index -= 1
+                    res =res[:cut_index]
+                else:
+                    res += '/' + temp
+                left = right
+        if res == '':
+            res = '/'
+
+        # 方法二
+        # # 双斜杠与尾部斜杠处理
+        # s = path.replace('//', '/')
+        # s = s[1:-1] if s.endswith('/') else s[1:]
+        # # 转换为数组处理
+        # s = s.split('/')
+
+        # res = []  # 返回结果
+        # for i in s:
+        #     if i == '..':
+        #         if len(res) >= 1:
+        #             res.pop(-1)
+        #     elif i == '.' or i == '':
+        #         pass
+        #     else:
+        #         res.append(i)
+        # res = '/'.join(res)
+        # res = '/' + res
+        return res

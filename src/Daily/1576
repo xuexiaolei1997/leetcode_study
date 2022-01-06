@@ -1,0 +1,16 @@
+class Solution:
+    def modifyString(self, s: str) -> str:
+        s = [i for i in s]
+        for i in range(len(s)):
+            if s[i] == '?':
+                l_c, r_c = 96, 123
+                if i > 0:
+                    l_c = ord(s[i-1])  # 左侧
+                if i < len(s)-1:
+                    r_c = ord(s[i+1])  # 右侧
+                i_c = 97
+                while i_c == l_c or i_c == r_c:
+                    i_c += 1
+                s[i] = chr(i_c)
+        s = ''.join(s)
+        return s
