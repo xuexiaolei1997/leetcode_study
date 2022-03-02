@@ -1,0 +1,107 @@
+class Solution:
+    def nearestPalindromic(self, n: str) -> str:
+
+        if int(n) <= 10:
+            return str(int(n) -1)
+        if n == '11':
+            return '9'
+
+        res = -1  # 返回结果
+        k = len(n)  # 长度
+
+        # 中间位置
+        mid = k//2-1 if k % 2 == 0 else (k-1)//2
+
+        # 左侧
+        left = n[:mid+1]
+        left_value = int(left)
+        res1 = -1
+        res2 = -1
+        if k % 2 == 1: # 奇数长度
+            init_right = n[mid+1:]  # 初始右侧
+            resverse_right = left[-2::-1]  # 左侧反转后的右侧
+
+            if init_right == resverse_right:  # 本身是回文，上下都找
+                # 向下找
+                new_left = str(left_value - 1)
+                if len(new_left) < len(left):  # 位数减少
+                    new_reverse_right = new_left[-1::-1]
+                else:
+                    new_reverse_right = new_left[-2::-1]
+                res1 = new_left + new_reverse_right
+
+                # 向上找
+                new_left = str(left_value + 1)
+                if len(new_left) > len(left):  # 位数增加
+                    new_reverse_right = new_left[-3::-1]
+                else:
+                    new_reverse_right = new_left[-2::-1]
+                res2 = new_left + new_reverse_right
+                # 需要注意，如果减少了位数，需要特殊处理
+            else:  # 本身不是回文，根据情况向上或向下找（更新左侧值）
+                init_right_value = int(init_right)
+                resverse_right_value = int(resverse_right)
+                res1 = left + resverse_right  # 先确定直观上的回文数
+                # 更新左侧
+                if resverse_right_value < init_right_value:  # 向上找
+                    new_left = str(left_value + 1)
+                    if len(new_left) > len(left):  # 位数增加
+                        new_reverse_right = new_left[-2::-1]
+                    else:
+                        new_reverse_right = new_left[-2::-1]
+                elif resverse_right_value > init_right_value:  # 向下找
+                    new_left = str(left_value - 1)
+                    if len(new_left) < len(left):  # 位数减少
+                        new_reverse_right = new_left[-1::-1]
+                    else:
+                        new_reverse_right = new_left[-2::-1]
+                res2 = new_left + new_reverse_right
+        else:  # 偶数长度
+            init_right = n[mid+1:]
+            resverse_right = left[-1::-1]
+
+            if init_right == resverse_right:  # 本身是回文，上下都找
+                # 向下找
+                new_left = str(left_value - 1)
+                # 这里位数减少与否，都需要从左侧映射到右侧
+                new_reverse_right = new_left[-1::-1]
+                if len(new_left) < len(left):  # 位数减少，在最后补9，仅存在双端为1的情况
+                    new_reverse_right += '9'
+                res1 = new_left + new_reverse_right
+
+                # 向上找
+                new_left = str(left_value + 1)
+                if len(new_left) > len(left):  # 位数增加，中间0保留
+                    new_reverse_right = new_left[-2::-1]
+                else:
+                    new_reverse_right = new_left[-1::-1]
+                res2 = new_left + new_reverse_right
+            else:  # 本身不是回文，根据情况向上或向下找（更新左侧值）
+                init_right_value = int(init_right)
+                resverse_right_value = int(resverse_right)
+                res1 = left + resverse_right  # 先确定直观上的回文数
+                # 更新左侧
+                if resverse_right_value < init_right_value:  # 向上找
+                    new_left = str(left_value + 1)
+                    # 如果此时向上找，没有位数增加情况，只有全为9时，才会发生，但已经在回文中进行处理
+                    new_reverse_right = new_left[-1::-1]
+                elif resverse_right_value > init_right_value:  # 向下找
+                    new_left = str(left_value - 1)
+                    if len(new_left) < len(left):  # 位数减少，只有首位为1其余全为0的情况下才能满足
+                        new_reverse_right = new_left[-1::-1] + '9'
+                    else:
+                        new_reverse_right = new_left[-1::-1]
+                res2 = new_left + new_reverse_right
+
+        res1 = int(res1)
+        res2 = int(res2)
+        print(res1)
+        print(res2)
+        d1 = abs(res1 - int(n))
+        d2 = abs(res2 - int(n))
+        if d1 < d2:
+            return str(res1)
+        elif d1 > d2:
+            return str(res2)
+        else:
+            return str(min(res1, res2))
